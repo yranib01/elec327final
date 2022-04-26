@@ -19,6 +19,10 @@
 #define TIMER_VAL_10S (char) ('0' + timer_val_10s)
 #define TIMER_VAL_1S (char) ('0' + timer_val_1s)
 
+char ipaddress[15] = "000.000.000.000"; // THIS VARIABLE STORES THE IP ADDRESS
+char ipstr1[3], ipstr2[3], ipstr3[3], ipstr4[3];
+const char ip_address_str[12] = "IP ADDRESS:\r";
+
 const char newline[1] = "\r";
 
 // a whole bunch of strings to be printed to display
@@ -88,6 +92,14 @@ int prev_state = 0;
 
 void main(void)
 {
+    strcpy(ipstr1, byte2decimal(001));
+    strcpy(ipstr2, byte2decimal(002));
+    strcpy(ipstr3, byte2decimal(003));
+    strcpy(ipstr4, byte2decimal(004));
+
+    ip_concat(ipaddress, ipstr1, ipstr2, ipstr3, ipstr4);
+
+
     ENABLE_WDT;
 
     motor_setup();
@@ -139,7 +151,7 @@ void main(void)
             case 1:
                 prev_state = 0;
 
-                menu_sel = modulo_check(menu_sel, 2);
+                menu_sel = modulo_check(menu_sel, 3);
 
                 switch(menu_sel) {
                     case 0:
@@ -168,6 +180,13 @@ void main(void)
                             state = 14;
                         break;
 
+                    case 3:
+                        printBytes(ip_address_str, 12);
+                        WAIT_DISPLAY;
+                        printBytes(ipaddress, 15);
+                        WAIT_DISPLAY;
+                        LPM0;
+                        break;
 
                 } // switch (state 1)
                 break;
@@ -200,6 +219,8 @@ void main(void)
                         }
 
                         break;
+
+
 
                     default:
                         menu_sel = 0;
